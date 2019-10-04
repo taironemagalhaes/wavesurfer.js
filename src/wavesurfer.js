@@ -398,6 +398,17 @@ export default class WaveSurfer extends util.Observer {
         /**
          * @private The uninitialised Backend class
          */
+        // Back compat
+        if (this.params.backend == 'AudioElement') {
+            this.params.backend = 'MediaElement';
+        }
+
+        if (
+            this.params.backend == 'WebAudio' &&
+            !WebAudio.prototype.supportsWebAudio.call(null)
+        ) {
+            this.params.backend = 'MediaElement';
+        }
         this.Backend = this.backends[this.params.backend];
 
         /**
@@ -643,18 +654,6 @@ export default class WaveSurfer extends util.Observer {
     createBackend() {
         if (this.backend) {
             this.backend.destroy();
-        }
-
-        // Back compat
-        if (this.params.backend == 'AudioElement') {
-            this.params.backend = 'MediaElement';
-        }
-
-        if (
-            this.params.backend == 'WebAudio' &&
-            !this.Backend.prototype.supportsWebAudio.call(null)
-        ) {
-            this.params.backend = 'MediaElement';
         }
 
         this.backend = new this.Backend(this.params);
@@ -1238,8 +1237,8 @@ export default class WaveSurfer extends util.Observer {
     loadDecodedBuffer(buffer) {
         this.backend.load(buffer);
         this.drawBuffer();
-        this.fireEvent('ready');
         this.isReady = true;
+        this.fireEvent('ready');
     }
 
     /**
@@ -1379,8 +1378,8 @@ export default class WaveSurfer extends util.Observer {
         this.tmpEvents.push(
             this.backend.once('canplay', () => {
                 this.drawBuffer();
-                this.fireEvent('ready');
                 this.isReady = true;
+                this.fireEvent('ready');
             }),
             this.backend.once('error', err => this.fireEvent('error', err))
         );
@@ -1459,7 +1458,7 @@ export default class WaveSurfer extends util.Observer {
                 this.currentRequest = null;
             }),
             request.on('error', e => {
-                this.fireEvent('error', 'fetch error: ' + e.message);
+                this.fireEvent('error', e);
                 this.currentRequest = null;
             })
         );
