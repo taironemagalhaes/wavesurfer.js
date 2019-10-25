@@ -1,6 +1,33 @@
 wavesurfer.js changelog
 =======================
 
+3.2.0 (24.10.2019)
+------------------
+
+- New `MediaElementWebAudio` backend (#1767):
+  - Allows you to use Web Audio API with big audio files, loading audio
+    like with MediaElement backend (HTML5 audio tag), so you can use the
+    same methods of MediaElement backend for loading and playback. This way,
+    the audio resource is not loaded entirely from server, but in ranges,
+    allowing you to use WebAudio features, like filters, on audio files with
+    a long duration. You can also supply peaks data, so the entire audio file
+    does not have to be decoded.
+    For example:
+    ```
+    wavesurfer.load(url | HTMLMediaElement, peaks, preload, duration);
+    wavesurfer.play();
+    wavesurfer.setFilter(customFilter);
+    ```
+- Add `barRadius` option to create waveforms with rounded bars (#953)
+- Throw error when the url parameter supplied to `wavesurfer.load()`
+  is empty (#1773, #1775)
+- Specify non-minified wavesurfer.js in `main` entry of `package.json` (#1759)
+- Add `dblclick` event listener to wavesurfer wrapper (#1764)
+- Fix `destroy()` in `MediaElement` backend (#1778)
+- Cursor plugin: flip position of time text to left of the cursor where needed
+  to improve readability (#1776)
+- Regions plugin: change region end handler position (#1762, #1781)
+
 3.1.0 (26.09.2019)
 ------------------
 
