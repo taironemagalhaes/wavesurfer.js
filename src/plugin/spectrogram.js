@@ -348,6 +348,8 @@ export default class SpectrogramPlugin {
 
             drawer.wrapper.addEventListener('scroll', this._onScroll);
             ws.on('redraw', this._onRender);
+
+            this.fireEvent('spectrogram_ready', true);
         };
     }
 
